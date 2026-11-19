@@ -71,6 +71,23 @@ header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:spac
 .choice.wrong{border-color:var(--bad);background:var(--bad-soft)}
 .choice.wrong .ltr{background:var(--bad);border-color:var(--bad);color:var(--surface)}
 .choice.dim{opacity:.55}
+.choice.selected{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.choice.selected .ltr{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.btn[disabled]{opacity:.4;cursor:not-allowed}
+.actions .spacer{flex:1}
+.session{margin-top:16px}
+.session-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.session .rail-label{margin:0 0 6px 2px}
+.link{all:unset;cursor:pointer;font-size:14px;color:var(--accent);font-weight:500}
+.link:hover{text-decoration:underline}
+.link:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.strip{position:relative;display:flex;gap:6px;overflow-x:auto;padding:3px 3px 8px}
+.pill{all:unset;box-sizing:border-box;flex:none;min-width:32px;height:32px;padding:0 6px;border-radius:6px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;font:500 12px var(--f-mono);color:var(--muted);cursor:pointer;font-variant-numeric:tabular-nums}
+.pill.open{border-style:dashed}
+.pill.right{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.pill.wrong{background:var(--bad-soft);border-color:var(--bad);color:var(--bad)}
+.pill[aria-current="true"]{outline:2px solid var(--accent);outline-offset:1px;color:var(--ink)}
+.pill:focus-visible{outline:2px solid var(--ink)}
 .feedback{margin-top:16px;padding:14px 16px;border-radius:8px;border:1px solid var(--line);background:var(--bg)}
 .feedback .verdict{font-family:var(--f-display);font-weight:700;font-size:20px;margin:0 0 4px}
 .feedback.ok .verdict{color:var(--good)} .feedback.no .verdict{color:var(--bad)}
@@ -103,7 +120,8 @@ mjx-container{color:inherit}
 @media (max-width:760px){
   .layout{grid-template-columns:minmax(0,1fr)}
   .rail{position:static;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:6px;margin-left:calc(-1 * max(16px,env(safe-area-inset-left,0px)));margin-right:calc(-1 * max(16px,env(safe-area-inset-right,0px)));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-  .rail-label{display:none}
+  .rail .rail-label{display:none}
+  .hint{display:none}
   .topic{flex:none;border:1px solid var(--line);background:var(--surface);white-space:nowrap;padding:7px 12px}
   .topic[aria-pressed="true"]{box-shadow:none;border-color:var(--accent);background:var(--accent-soft)}
   .topic .bar{display:none}
@@ -141,11 +159,17 @@ mjx-container{color:inherit}
         <ul class="choices" id="q-choices"></ul>
         <div class="feedback" id="q-feedback" hidden></div>
         <div class="actions">
-          <button class="btn" id="next" type="button" hidden>Next problem</button>
-          <button class="btn ghost" id="skip" type="button">Skip</button>
-          <span class="hint">Keys: A–D or 1–4 to answer · Enter for next</span>
+          <button class="btn" id="primary" type="button" disabled>Check answer</button>
+          <button class="btn ghost" id="prev" type="button" disabled>← Previous</button>
+          <button class="btn ghost" id="skip" type="button">Skip for now →</button>
+          <span class="spacer"></span>
+          <span class="hint">A–D to pick · Enter to check · ← → to move</span>
         </div>
       </section>
+      <div class="session">
+        <div class="session-head"><span class="rail-label">This session</span><button class="link" id="to-open" type="button" hidden></button></div>
+        <div class="strip" id="strip" aria-label="Problems this session"></div>
+      </div>
       <details class="ideas" id="ideas" open>
         <summary id="ideas-title">Key ideas</summary>
         <ul id="ideas-list"></ul>
@@ -699,15 +723,16 @@ function generate(id){
   const KEY='aaf-practice-v1';
   let stats={};try{stats=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){}
   const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(stats))}catch(e){}};
-  let current='mixed',q=null,answered=false,count=0,streak=0;
+  let current='mixed',streak=0;
   try{const s=localStorage.getItem(KEY+'-topic');if(s&&(s==='mixed'||TOPICS.some(t=>t.id===s)))current=s}catch(e){}
+  const hist=[];let idx=-1;
   const $=id=>document.getElementById(id);
+  const L='ABCD';
   const rail=$('rail');
-  const all=[{id:'mixed',name:'Mixed review'},...TOPICS];
-  for(const t of all){
+  for(const t of [{id:'mixed',name:'Mixed review'},...TOPICS]){
     const b=document.createElement('button');b.type='button';b.className='topic';b.dataset.id=t.id;
     b.innerHTML=`<span>${t.name}</span><span class="score"></span><span class="bar"><i></i></span>`;
-    b.addEventListener('click',()=>{current=t.id;try{localStorage.setItem(KEY+'-topic',t.id)}catch(e){}next()});
+    b.addEventListener('click',()=>{current=t.id;try{localStorage.setItem(KEY+'-topic',t.id)}catch(e){}addNew()});
     rail.appendChild(b);
   }
   function paintRail(){
@@ -721,50 +746,89 @@ function generate(id){
     }
     $('t-right').textContent=R;$('t-tried').textContent=N;$('t-streak').textContent=streak;
   }
+  function paintStrip(){
+    const s=$('strip');s.innerHTML='';
+    hist.forEach((h,i)=>{
+      const b=document.createElement('button');b.type='button';
+      b.className='pill '+(h.done?(h.ok?'right':'wrong'):'open');b.textContent=i+1;
+      b.setAttribute('aria-label',`Problem ${i+1}: ${h.done?(h.ok?'correct':'missed'):'not answered yet'}`);
+      if(i===idx)b.setAttribute('aria-current','true');
+      b.addEventListener('click',()=>go(i));s.appendChild(b);
+    });
+    const cur=s.children[idx];if(cur)s.scrollLeft=Math.max(0,cur.offsetLeft-s.clientWidth/2);
+    const open=hist.filter((h,i)=>!h.done&&i!==idx).length,ob=$('to-open');
+    ob.hidden=!open;ob.textContent=`Go to unanswered (${open})`;
+  }
   const typeset=el=>{if(window.MathJax&&MathJax.typesetPromise){try{MathJax.typesetClear&&MathJax.typesetClear([el])}catch(e){}return MathJax.typesetPromise([el]).catch(()=>{})}return Promise.resolve()};
   function render(){
-    const t=TOPICS.find(x=>x.id===q.topic);
-    $('q-topic').textContent=current==='mixed'?`Mixed review · ${t.name}`:t.name;
-    $('q-num').textContent=`Problem ${count}`;
+    const h=hist[idx],q=h.q,t=TOPICS.find(x=>x.id===q.topic);
+    $('q-topic').textContent=h.mixed?`Mixed review · ${t.name}`:t.name;
+    $('q-num').textContent=`Problem ${idx+1} of ${hist.length}`;
     $('q-text').innerHTML=q.text;
     const fig=$('q-fig');if(q.figure){fig.innerHTML=q.figure;fig.hidden=false}else{fig.innerHTML='';fig.hidden=true}
     const ul=$('q-choices');ul.className='choices'+(q.figs?' figs':'');ul.innerHTML='';
-    q.choices.forEach((c,i)=>{const li=document.createElement('li');const b=document.createElement('button');b.type='button';b.className='choice';b.id='choice-'+i;
-      b.innerHTML=`<span class="ltr">${'ABCD'[i]}</span><span class="body">${c}</span>`;b.addEventListener('click',()=>answer(i));li.appendChild(b);ul.appendChild(li)});
-    $('q-feedback').hidden=true;$('next').hidden=true;$('skip').hidden=false;
+    q.choices.forEach((c,i)=>{
+      const li=document.createElement('li'),b=document.createElement('button');b.type='button';b.className='choice';b.id='choice-'+i;
+      b.innerHTML=`<span class="ltr">${L[i]}</span><span class="body">${c}</span>`;
+      if(h.done){b.disabled=true;b.classList.add(i===q.correct?'right':i===h.sel?'wrong':'dim')}
+      else{b.classList.toggle('selected',h.sel===i);b.setAttribute('aria-pressed',String(h.sel===i));b.addEventListener('click',()=>select(i))}
+      li.appendChild(b);ul.appendChild(li);
+    });
+    const fb=$('q-feedback');
+    if(h.done){fb.className='feedback '+(h.ok?'ok':'no');
+      fb.innerHTML=`<p class="verdict">${h.ok?'Correct':`Not quite. You picked ${L[h.sel]}; the answer is ${L[q.correct]}.`}</p><p>${q.explain}</p>`;fb.hidden=false}
+    else{fb.hidden=true;fb.innerHTML=''}
+    const p=$('primary');
+    if(h.done){p.textContent='Next problem';p.disabled=false}else{p.textContent='Check answer';p.disabled=h.sel==null}
+    $('prev').disabled=idx===0;
+    $('skip').hidden=h.done;
     $('ideas-title').textContent=`Key ideas: ${t.name}`;
     $('ideas-list').innerHTML=t.ideas.map(s=>`<li>${s}</li>`).join('');
-    paintRail();
+    paintRail();paintStrip();
     typeset($('card'));typeset($('ideas'));
   }
-  function next(){
+  function addNew(){
     const id=current==='mixed'?pick(TOPICS).id:current;
-    q=generate(id);answered=false;count++;render();
+    hist.push({q:generate(id),mixed:current==='mixed',sel:null,done:false});idx=hist.length-1;render();
   }
-  function answer(i){
-    if(answered)return;answered=true;
-    const ok=i===q.correct;
-    const s=stats[q.topic]||(stats[q.topic]={c:0,n:0});s.n++;if(ok)s.c++;save();
-    streak=ok?streak+1:0;
-    $('q-choices').querySelectorAll('.choice').forEach((b,j)=>{b.disabled=true;if(j===q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');else b.classList.add('dim')});
-    const fb=$('q-feedback');fb.className='feedback '+(ok?'ok':'no');
-    fb.innerHTML=`<p class="verdict">${ok?'Correct':'Not quite. The answer is '+'ABCD'[q.correct]+'.'}</p><p>${q.explain}</p>`;
-    fb.hidden=false;$('next').hidden=false;$('skip').hidden=true;$('next').focus({preventScroll:true});
-    paintRail();typeset(fb);
+  function go(i){if(i<0)return;if(i>=hist.length){addNew();return}idx=i;render()}
+  function select(i){
+    const h=hist[idx];if(h.done)return;h.sel=i;
+    $('q-choices').querySelectorAll('.choice').forEach((b,j)=>{b.classList.toggle('selected',j===i);b.setAttribute('aria-pressed',String(j===i))});
+    $('primary').disabled=false;
   }
-  $('next').addEventListener('click',next);$('skip').addEventListener('click',next);
+  function check(){
+    const h=hist[idx];if(h.done||h.sel==null)return;
+    h.done=true;h.ok=h.sel===h.q.correct;
+    const s=stats[h.q.topic]||(stats[h.q.topic]={c:0,n:0});s.n++;if(h.ok)s.c++;save();
+    streak=h.ok?streak+1:0;
+    render();$('primary').focus({preventScroll:true});
+  }
+  $('primary').addEventListener('click',()=>{hist[idx].done?go(idx+1):check()});
+  $('prev').addEventListener('click',()=>go(idx-1));
+  $('skip').addEventListener('click',()=>go(idx+1));
+  $('to-open').addEventListener('click',()=>{
+    for(let k=1;k<=hist.length;k++){const i=(idx+k)%hist.length;if(!hist[i].done&&i!==idx){go(i);return}}
+  });
   let armed=false;
   $('reset').addEventListener('click',e=>{
     if(!armed){armed=true;e.target.textContent='Click again to erase all scores';e.target.classList.add('confirm');setTimeout(()=>{armed=false;e.target.textContent='Reset scores';e.target.classList.remove('confirm')},4000);return}
     stats={};streak=0;save();armed=false;e.target.textContent='Reset scores';e.target.classList.remove('confirm');paintRail();
   });
   document.addEventListener('keydown',e=>{
-    if(e.metaKey||e.ctrlKey||e.altKey)return;
-    const k=e.key.toLowerCase();const idx='abcd'.indexOf(k)>=0?'abcd'.indexOf(k):'1234'.indexOf(k);
-    if(!answered&&idx>=0&&e.target.tagName!=='INPUT'){answer(idx);e.preventDefault()}
-    else if(answered&&(k==='enter'||k==='n')&&document.activeElement?.id!=='reset'){next();e.preventDefault()}
+    if(e.metaKey||e.ctrlKey||e.altKey||!hist.length)return;
+    const h=hist[idx],k=e.key.toLowerCase();
+    let i=k.length===1?'abcd'.indexOf(k):-1;if(i<0&&k.length===1)i='1234'.indexOf(k);
+    if(i>=0&&!h.done&&i<h.q.choices.length){select(i);e.preventDefault();return}
+    if(k==='enter'){
+      if(e.target.closest&&e.target.closest('.choice,.pill,.topic,#prev,#skip,#to-open,#reset,summary,a'))return;
+      if(h.done)go(idx+1);else if(h.sel!=null)check();
+      e.preventDefault();return;
+    }
+    if(e.target.closest&&e.target.closest('.strip'))return;
+    if(k==='arrowleft'){go(idx-1);e.preventDefault()}else if(k==='arrowright'){go(idx+1);e.preventDefault()}
   });
-  next();
+  addNew();
   const mj=document.getElementById('mjx');
   mj.addEventListener('load',()=>{const w=()=>window.MathJax&&MathJax.startup&&MathJax.startup.promise?MathJax.startup.promise.then(()=>{typeset($('card'));typeset($('ideas'))}):setTimeout(w,50);w()});
 })();
