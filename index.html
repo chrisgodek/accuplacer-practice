@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Free practice problems for the ACCUPLACER Advanced Algebra and Functions test, with worked explanations.">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>AAF Practice Bench</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@600;700&display=swap">
+<style>
+/* Layout: a workbench — topic rail on the left (chip row on phones), one problem card on the right, refresher notes underneath. */
+:root{
+  --bg:#EEF2F5; --surface:#FFFFFF; --ink:#14202C; --muted:#5A6876; --line:#D3DBE3; --grid:#E4EAF0;
+  --accent:#1D5BA8; --accent-soft:#E2ECF8; --copper:#B4632A;
+  --good:#23794A; --good-soft:#E1F2E8; --bad:#B42A21; --bad-soft:#F8E4E2;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E141A; --surface:#161F28; --ink:#E5ECF2; --muted:#93A2B0; --line:#2A3744; --grid:#202B36;
+  --accent:#7AAEEF; --accent-soft:#1B2C40; --copper:#E39056;
+  --good:#5DC48C; --good-soft:#15301F; --bad:#F27E73; --bad-soft:#3A1C1A; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0E141A; --surface:#161F28; --ink:#E5ECF2; --muted:#93A2B0; --line:#2A3744; --grid:#202B36;
+  --accent:#7AAEEF; --accent-soft:#1B2C40; --copper:#E39056;
+  --good:#5DC48C; --good-soft:#15301F; --bad:#F27E73; --bad-soft:#3A1C1A; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.55}
+.wrap{max-width:1080px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px}
+.brand h1{font-family:var(--f-display);font-weight:700;font-size:clamp(28px,4.4vw,40px);line-height:1.05;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.brand h1 span{color:var(--copper)}
+.brand p{margin:6px 0 0;color:var(--muted);max-width:60ch;font-size:15px}
+.tally{display:flex;gap:18px;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.tally b{display:block;font-family:var(--f-display);font-size:26px;color:var(--ink);font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.layout{display:grid;grid-template-columns:250px minmax(0,1fr);gap:22px;align-items:start}
+.rail{display:flex;flex-direction:column;gap:4px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
+.rail-label{font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px 10px}
+.topic{all:unset;box-sizing:border-box;display:grid;grid-template-columns:1fr auto;gap:2px 8px;align-items:center;padding:8px 10px;border-radius:8px;cursor:pointer;color:var(--ink);font-size:14.5px}
+.topic:hover{background:var(--surface)}
+.topic:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.topic[aria-pressed="true"]{background:var(--surface);box-shadow:inset 3px 0 0 var(--accent);font-weight:600}
+.topic .score{font-family:var(--f-mono);font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.topic .bar{grid-column:1/-1;height:3px;border-radius:2px;background:var(--grid);overflow:hidden}
+.topic .bar i{display:block;height:100%;background:var(--copper);width:0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px 26px 22px;min-width:0}
+.eyebrow{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;font-family:var(--f-mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.eyebrow .tag{color:var(--accent)}
+.qtext{font-size:18px;margin:14px 0 4px;max-width:68ch}
+.qtext table{border-collapse:collapse;margin:10px 0;font-variant-numeric:tabular-nums}
+.qtext td,.qtext th{border:1px solid var(--line);padding:4px 14px;text-align:right;font-size:15px}
+.qtext th{font-weight:500;color:var(--muted);font-size:13px}
+.figure{margin:14px 0 4px;overflow-x:auto}
+.figure svg{display:block;max-width:100%;height:auto}
+.choices{list-style:none;padding:0;margin:16px 0 0;display:grid;gap:8px}
+.choices.figs{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.choice{all:unset;box-sizing:border-box;width:100%;display:flex;gap:12px;align-items:center;padding:10px 14px;border:1px solid var(--line);border-radius:8px;cursor:pointer;min-height:48px;font-size:17px;background:var(--surface)}
+.choices.figs .choice{flex-direction:column;align-items:stretch;padding:8px}
+.choice:hover:not([disabled]){border-color:var(--accent);background:var(--accent-soft)}
+.choice:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.choice .ltr{flex:none;width:28px;height:28px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.choice .body{min-width:0;overflow-x:auto}
+.choice[disabled]{cursor:default}
+.choice.right{border-color:var(--good);background:var(--good-soft)}
+.choice.right .ltr{background:var(--good);border-color:var(--good);color:var(--surface)}
+.choice.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.choice.wrong .ltr{background:var(--bad);border-color:var(--bad);color:var(--surface)}
+.choice.dim{opacity:.55}
+.feedback{margin-top:16px;padding:14px 16px;border-radius:8px;border:1px solid var(--line);background:var(--bg)}
+.feedback .verdict{font-family:var(--f-display);font-weight:700;font-size:20px;margin:0 0 4px}
+.feedback.ok .verdict{color:var(--good)} .feedback.no .verdict{color:var(--bad)}
+.feedback p{margin:4px 0;max-width:70ch}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:18px}
+.btn{all:unset;box-sizing:border-box;cursor:pointer;padding:10px 18px;border-radius:8px;font-weight:600;font-size:15px;background:var(--accent);color:var(--surface)}
+.btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.btn.ghost{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.btn.ghost:hover{color:var(--ink);border-color:var(--muted)}
+.hint{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+details.ideas{margin-top:16px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:4px 22px}
+details.ideas summary{cursor:pointer;padding:12px 0;font-weight:600;list-style-position:inside}
+details.ideas ul{margin:0 0 16px;padding-left:20px;display:grid;gap:6px;max-width:70ch}
+.foot{margin-top:28px;color:var(--muted);font-size:13px;max-width:70ch}
+.foot button{all:unset;cursor:pointer;text-decoration:underline;color:var(--muted)}
+.foot .confirm{color:var(--bad)}
+/* graph */
+.g-grid{stroke:var(--grid);stroke-width:1}
+.g-axis{stroke:var(--muted);stroke-width:1.4}
+.g-curve{stroke:var(--accent);stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.g-pt{fill:var(--copper)}
+.g-lbl{fill:var(--muted);font:11px var(--f-mono)}
+.g-frame{fill:var(--surface);stroke:var(--line)}
+.d-line{stroke:var(--ink);stroke-width:2;fill:none;stroke-linejoin:round}
+.d-fill{fill:var(--accent-soft);stroke:var(--ink);stroke-width:2;stroke-linejoin:round}
+.d-back{stroke:var(--muted);stroke-width:1.2;fill:none;stroke-dasharray:4 4}
+.d-txt{fill:var(--ink);font:500 14px var(--f-body)}
+.d-pt{fill:var(--ink);font:600 15px var(--f-body)}
+mjx-container{color:inherit}
+@media (max-width:760px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .rail{position:static;flex-direction:row;overflow-x:auto;gap:6px;padding-bottom:6px;margin-left:calc(-1 * max(16px,env(safe-area-inset-left,0px)));margin-right:calc(-1 * max(16px,env(safe-area-inset-right,0px)));padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+  .rail-label{display:none}
+  .topic{flex:none;border:1px solid var(--line);background:var(--surface);white-space:nowrap;padding:7px 12px}
+  .topic[aria-pressed="true"]{box-shadow:none;border-color:var(--accent);background:var(--accent-soft)}
+  .topic .bar{display:none}
+  .card{padding:18px 16px}
+  .qtext{font-size:17px}
+}
+@media (prefers-reduced-motion:no-preference){.feedback{animation:rise .18s ease-out}@keyframes rise{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:none}}}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>AAF Practice <span>Bench</span></h1>
+      <p>Unlimited practice for the 10 skill areas on the ACCUPLACER Advanced Algebra and Functions test. Every problem is newly generated, multiple choice, and explained.</p>
+    </div>
+    <div class="tally" aria-live="polite">
+      <div><b id="t-right">0</b>correct</div>
+      <div><b id="t-tried">0</b>answered</div>
+      <div><b id="t-streak">0</b>streak</div>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="rail" id="rail" aria-label="Skill areas">
+      <p class="rail-label">Skill areas</p>
+    </nav>
+    <main>
+      <section class="card" id="card" aria-live="polite">
+        <div class="eyebrow"><span class="tag" id="q-topic">Loading</span><span id="q-num"></span></div>
+        <div class="qtext" id="q-text">Building your first problem…</div>
+        <div class="figure" id="q-fig" hidden></div>
+        <ul class="choices" id="q-choices"></ul>
+        <div class="feedback" id="q-feedback" hidden></div>
+        <div class="actions">
+          <button class="btn" id="next" type="button" hidden>Next problem</button>
+          <button class="btn ghost" id="skip" type="button">Skip</button>
+          <span class="hint">Keys: A–D or 1–4 to answer · Enter for next</span>
+        </div>
+      </section>
+      <details class="ideas" id="ideas" open>
+        <summary id="ideas-title">Key ideas</summary>
+        <ul id="ideas-list"></ul>
+      </details>
+    </main>
+  </div>
+
+  <p class="foot">Skill areas come from College Board's published sample questions for this test. <a href="updates.html" style="color:inherit">What's new</a> · <a href="/" style="color:inherit">Chris Godek</a>. This page is a free study aid and isn't affiliated with College Board. Your scores stay in this browser. <button type="button" id="reset">Reset scores</button></p>
+</div>
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']] },
+  svg: { fontCache: 'global' },
+  options: { enableMenu: false },
+  startup: { typeset: false }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-svg.js" async id="mjx"></script>
+
+<script id="gen">
+/* ---------- helpers ---------- */
+const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const nz=(a,b)=>{let v;do v=R(a,b);while(v===0);return v};
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const gcd=(a,b)=>{a=Math.abs(a);b=Math.abs(b);while(b){[a,b]=[b,a%b]}return a};
+const m=s=>'\\('+s+'\\)';
+const money=c=>'$'+(c/100).toFixed(2);
+const dollars=n=>'$'+n.toLocaleString('en-US');
+function frac(n,d=1){if(d<0){n=-n;d=-d}const g=gcd(n,d)||1;n/=g;d/=g;if(d===1)return `${n}`;return `${n<0?'-':''}\\frac{${Math.abs(n)}}{${d}}`}
+function sqrtSimp(n){for(let k=Math.floor(Math.sqrt(n));k>1;k--){if(n%(k*k)===0)return [k,n/(k*k)]}return [1,n]}
+function radFrac(n,d){let [o,i]=sqrtSimp(n);const g=gcd(o,d);o/=g;d/=g;const num=i===1?`${o}`:`${o===1?'':o}\\sqrt{${i}}`;return d===1?num:`\\frac{${num}}{${d}}`}
+function poly(cs,v='x'){const deg=cs.length-1;let s='';cs.forEach((c,i)=>{const p=deg-i;if(c===0)return;const a=Math.abs(c);const body=p===0?`${a}`:`${a===1?'':a}${v}${p>1?`^{${p}}`:''}`;s+=s===''?(c<0?'-':'')+body:(c<0?' - ':' + ')+body});return s||'0'}
+const xp=(b,v='x')=>b===0?v:`${v} ${b<0?'-':'+'} ${Math.abs(b)}`;
+const par=b=>`(${xp(b)})`;
+const coef=a=>a===1?'':a===-1?'-':`${a}`;
+const sub=(a,b)=>`${a} - ${b<0?`(${b})`:b}`;
+function lineTex(mn,md,bn,bd=1){let s='y = ';const mt=frac(mn,md);if(mn!==0)s+=mt==='1'?'x':mt==='-1'?'-x':mt+'x';const bt=frac(bn,bd);if(bn===0){if(mn===0)s+='0'}else if(mn===0)s+=bt;else s+=bt.startsWith('-')?` - ${bt.slice(1)}`:` + ${bt}`;return s}
+function piFrac(n,d){if(d<0){n=-n;d=-d}const g=gcd(n,d);n/=g;d/=g;const top=n===1?'\\pi':`${n}\\pi`;return d===1?top:`\\frac{${top}}{${d}}`}
+const dec=x=>String(+x.toFixed(4));
+const list=a=>m(a.join(',\\ '));
+const num=n=>m(String(n));
+
+function Q(o){
+  const seen=new Set([o.answer]);const wrong=[];
+  for(const w of o.wrong){if(w==null||seen.has(w))continue;seen.add(w);wrong.push(w);if(wrong.length===3)break}
+  if(wrong.length<3)throw new Error('retry');
+  const choices=shuffle([o.answer,...wrong]);
+  return {...o,choices,correct:choices.indexOf(o.answer)};
+}
+
+/* ---------- figures ---------- */
+let gid=0;
+function graph({w=280,min=-10,max=10,curves=[],pts=[],small=false,label='Graph'}={}){
+  const id='clip'+(++gid)+'_'+Math.floor(Math.random()*1e6);const pad=small?6:24;const S=(w-2*pad)/(max-min);
+  const X=x=>+(pad+(x-min)*S).toFixed(2),Y=y=>+(pad+(max-y)*S).toFixed(2);
+  let g=`<rect class="g-frame" x="0.5" y="0.5" width="${w-1}" height="${w-1}" rx="6"/>`;
+  for(let v=min;v<=max;v++)g+=`<line class="g-grid" x1="${X(v)}" y1="${Y(min)}" x2="${X(v)}" y2="${Y(max)}"/><line class="g-grid" x1="${X(min)}" y1="${Y(v)}" x2="${X(max)}" y2="${Y(v)}"/>`;
+  g+=`<line class="g-axis" x1="${X(min)}" y1="${Y(0)}" x2="${X(max)}" y2="${Y(0)}"/><line class="g-axis" x1="${X(0)}" y1="${Y(min)}" x2="${X(0)}" y2="${Y(max)}"/>`;
+  if(!small){
+    for(let v=min+2;v<max;v+=2){if(v===0)continue;g+=`<text class="g-lbl" x="${X(v)}" y="${Y(0)+14}" text-anchor="middle">${v}</text><text class="g-lbl" x="${X(0)-5}" y="${Y(v)+4}" text-anchor="end">${v}</text>`}
+    g+=`<text class="g-lbl" x="${X(0)-5}" y="${Y(0)+14}" text-anchor="end">O</text><text class="g-lbl" x="${X(max)-2}" y="${Y(0)-6}" text-anchor="end" font-style="italic">x</text><text class="g-lbl" x="${X(0)+6}" y="${Y(max)+10}" font-style="italic">y</text>`;
+  }
+  let paths='';
+  for(const c of curves){
+    const P=[];
+    if(c.f){const n=400;for(let i=0;i<=n;i++){const x=min+(max-min)*i/n;P.push([x,c.f(x)])}}
+    else{const n=500;for(let i=0;i<=n;i++){const t=c.t0+(c.t1-c.t0)*i/n;P.push([c.fx(t),c.fy(t)])}}
+    let d='',pen=false;
+    for(const [x,y] of P){if(!isFinite(y)||!isFinite(x)||Math.abs(y)>max*3){pen=false;continue}d+=(pen?'L':'M')+X(x)+' '+Y(y)+' ';pen=true}
+    paths+=`<path class="g-curve" d="${d}"/>`;
+  }
+  let dots=pts.map(([x,y])=>`<circle class="g-pt" cx="${X(x)}" cy="${Y(y)}" r="${small?3:4}"/>`).join('');
+  return `<svg viewBox="0 0 ${w} ${w}" width="${w}" height="${w}" role="img" aria-label="${label}"><defs><clipPath id="${id}"><rect x="${pad}" y="${pad}" width="${w-2*pad}" height="${w-2*pad}"/></clipPath></defs>${g}<g clip-path="url(#${id})">${paths}</g>${dots}</svg>`;
+}
+/* right triangle: right angle at C (bottom right), A bottom left, B top right */
+function rightTri({ac='',bc='',ab='',angleA=''}={}){
+  return `<svg viewBox="0 0 300 190" width="300" height="190" role="img" aria-label="Right triangle ABC with the right angle at C">
+  <path class="d-fill" d="M40 155 L250 155 L250 35 Z"/>
+  <path class="d-line" d="M236 155 L236 141 L250 141"/>
+  <text class="d-pt" x="22" y="168">A</text><text class="d-pt" x="258" y="168">C</text><text class="d-pt" x="258" y="34">B</text>
+  ${angleA?`<path class="d-line" d="M78 155 A38 38 0 0 0 73 136" /><text class="d-txt" x="86" y="148">${angleA}</text>`:''}
+  <text class="d-txt" x="145" y="178" text-anchor="middle">${ac}</text>
+  <text class="d-txt" x="262" y="100">${bc}</text>
+  <text class="d-txt" x="132" y="86" text-anchor="end">${ab}</text></svg>`;
+}
+function prism(l,w,h){
+  return `<svg viewBox="0 0 300 190" width="300" height="190" role="img" aria-label="Rectangular prism, length ${l}, width ${w}, height ${h}">
+  <path class="d-back" d="M90 40 L90 120 L40 160 M90 120 L230 120"/>
+  <path class="d-fill" d="M40 80 L180 80 L180 160 L40 160 Z"/>
+  <path class="d-line" d="M40 80 L90 40 L230 40 L180 80 M230 40 L230 120 L180 160"/>
+  <text class="d-txt" x="110" y="180" text-anchor="middle">${l} cm</text>
+  <text class="d-txt" x="214" y="150">${w} cm</text>
+  <text class="d-txt" x="34" y="125" text-anchor="end">${h} cm</text></svg>`;
+}
+function twoTris(a,b){
+  const t=(ox,[p,q,r])=>`<path class="d-fill" d="M${ox} 150 L${ox+110} 150 L${ox+30} 40 Z"/><text class="d-pt" x="${ox-16}" y="164">${p}</text><text class="d-pt" x="${ox+116}" y="164">${q}</text><text class="d-pt" x="${ox+24}" y="32">${r}</text>`;
+  return `<svg viewBox="0 0 320 180" width="320" height="180" role="img" aria-label="Triangles ${a.join('')} and ${b.join('')}">${t(24,a)}${t(184,b)}</svg>`;
+}
+function simTris(A,B,C,D,E,F){
+  return `<svg viewBox="0 0 340 190" width="340" height="190" role="img" aria-label="Similar triangles">
+  <path class="d-fill" d="M20 160 L110 160 L40 95 Z"/><path class="d-fill" d="M150 160 L310 160 L186 45 Z"/>
+  <text class="d-pt" x="6" y="175">A</text><text class="d-pt" x="112" y="175">B</text><text class="d-pt" x="34" y="88">C</text>
+  <text class="d-pt" x="136" y="175">D</text><text class="d-pt" x="312" y="175">E</text><text class="d-pt" x="180" y="38">F</text>
+  <text class="d-txt" x="65" y="180" text-anchor="middle">${A}</text><text class="d-txt" x="82" y="122">${B}</text>
+  <text class="d-txt" x="230" y="180" text-anchor="middle">${D}</text><text class="d-txt" x="254" y="98">${E}</text></svg>`;
+}
+
+/* ---------- 1. Linear equations ---------- */
+function lin_solve(){
+  const x0=nz(-9,9);let a=nz(-6,9),c;do c=nz(-6,9);while(c===a);
+  const b=R(-15,15),d=(a-c)*x0+b;
+  const w=[-x0,(a+c)!==0&&(d-b)%(a+c)===0?(d-b)/(a+c):null,(d+b)%(a-c)===0?(d+b)/(a-c):null,x0+1,x0-2,x0+3];
+  return Q({text:`Solve for ${m('x')}: ${m(`${poly([a,b])} = ${poly([c,d])}`)}`,answer:num(x0),wrong:w.map(v=>v==null?null:num(v)),
+    explain:`Move the ${m('x')} terms to one side and the numbers to the other: ${m(`${poly([a-c,0])} = ${d-b}`)}. Divide by ${m(a-c)} to get ${m(`x = ${x0}`)}.`});
+}
+function lin_twoPoints(){
+  const run=pick([1,2,3,4]),rise=nz(-6,6),x1=R(-5,5),y1=R(-6,6),x2=x1+run,y2=y1+rise;
+  const bn=y1*run-rise*x1,bd=run;
+  return Q({text:`Which equation describes the line through ${m(`(${x1}, ${y1})`)} and ${m(`(${x2}, ${y2})`)}?`,
+    answer:m(lineTex(rise,run,bn,bd)),
+    wrong:[lineTex(run,rise,bn,bd),lineTex(-rise,run,bn,bd),lineTex(rise,run,-bn,bd),lineTex(rise,run,y1),lineTex(-run,rise,bn,bd)].map(m),
+    explain:`Slope: ${m(`m = \\frac{${sub(y2,y1)}}{${sub(x2,x1)}} = ${frac(rise,run)}`)}. Then ${m(`b = y - mx = ${frac(bn,bd)}`)} using the point ${m(`(${x1}, ${y1})`)}. So ${m(lineTex(rise,run,bn,bd))}.`});
+}
+function lin_perpGraph(){
+  let p,q;do{p=nz(-4,4);q=R(1,4)}while(gcd(p,q)!==1||Math.abs(p)===q);
+  const k=R(-4,4),c=R(-4,4),perp=Math.random()<0.65;
+  const [an,ad]=perp?[-q,p]:[p,q];
+  const wrong=perp?[lineTex(p,q,c),lineTex(-p,q,c),lineTex(q,p,c),lineTex(-q,p,k)]:[lineTex(-q,p,c),lineTex(-p,q,c),lineTex(q,p,c),lineTex(p,q,k)];
+  const thru=c===0?'the origin, '+m('(0, 0)'):m(`(0, ${c})`);
+  return Q({text:`Which equation describes the line that passes through ${thru} and is <b>${perp?'perpendicular':'parallel'}</b> to the line shown?`,
+    figure:graph({curves:[{f:x=>p/q*x+k}],pts:[[0,k],[q,k+p]],label:'Line on a coordinate grid'}),
+    answer:m(lineTex(an,ad,c)),wrong:wrong.map(m),
+    explain:`The marked points ${m(`(0, ${k})`)} and ${m(`(${q}, ${k+p})`)} give the shown line a slope of ${m(frac(p,q))}. ${perp?`A perpendicular line has the negative reciprocal slope, ${m(frac(-q,p))}.`:`A parallel line has the same slope.`} Passing through ${m(`(0, ${c})`)} makes the ${m('y')}-intercept ${m(c)}.`});
+}
+
+/* ---------- 2. Linear applications ---------- */
+function app_service(){
+  const F=R(5,12)*10,r=R(6,14)*5,v=pick([0,1,2]);
+  const intro=`An electrician charges a ${dollars(F)} service-call fee plus ${dollars(r)} per hour of labor.`;
+  if(v===0)return Q({text:`${intro} Which equation gives the total cost ${m('C')}, in dollars, for ${m('h')} hours of work?`,
+    answer:m(`C = ${r}h + ${F}`),wrong:[`C = ${F}h + ${r}`,`C = ${r+F}h`,`C = ${r}(h + ${F})`,`C = ${r}h - ${F}`].map(m),
+    explain:`The hourly rate multiplies the hours, and the one-time fee is added once: ${m(`C = ${r}h + ${F}`)}.`});
+  const h=R(2,8),T=r*h+F;
+  if(v===1)return Q({text:`${intro} What is the total cost of a ${h}-hour job?`,answer:dollars(T),
+    wrong:[dollars(r*h),dollars((r+F)*h),dollars(F*h+r),dollars(T+r)],
+    explain:`${m(`${r}(${h}) + ${F} = ${r*h} + ${F} = ${T}`)}, so the job costs ${dollars(T)}.`});
+  return Q({text:`${intro} A customer's bill was ${dollars(T)}. How many hours did the electrician work?`,answer:num(h),
+    wrong:[(T+F)%r===0?num((T+F)/r):null,num(+(T/r).toFixed(1)),num(h+1),num(h-1),num(h+2)],
+    explain:`Solve ${m(`${r}h + ${F} = ${T}`)}: subtract ${F} to get ${m(`${r}h = ${T-F}`)}, then divide by ${r}: ${m(`h = ${h}`)}.`});
+}
+function app_rates(){
+  let a,bc,rA,rB,p,q;
+  do{rA=R(40,140);a=pick([10,20,25,50]);q=pick([2,4,5,10]);p=R(1,3*q);rB=100*p/q}while(gcd(p,q)!==1||Math.abs(rA-rB)<3||Math.abs(rA-rB)>60);
+  bc=rA*a;const d=Math.abs(rA-rB);const less=rA<rB;
+  const s=(dir,amt)=>`Wire A costs about ${money(amt)} ${dir?'less':'more'} per foot than Wire B.`;
+  const tbl=`<table><tr><th>Length (ft)</th><th>Cost</th></tr>${[1,2,3].map(k=>`<tr><td>${a*k}</td><td>${money(bc*k)}</td></tr>`).join('')}</table>`;
+  const d2=d+pick([10,20,30]);
+  return Q({text:`The table shows the cost of Wire A by length. The cost ${m('C')}, in dollars, of ${m('f')} feet of Wire B is ${m(`C = ${frac(p,q)}f`)}. Which statement compares the cost per foot?${tbl}`,
+    answer:s(less,d),wrong:[s(!less,d),s(less,d2),s(!less,d2)],
+    explain:`Wire A: ${money(bc)} ÷ ${a} ft = ${money(rA)} per foot. Wire B: the slope ${m(frac(p,q))} = ${money(rB)} per foot. The difference is ${money(d)}.`});
+}
+function app_ohm(){
+  const v=pick([0,1,2]);
+  if(v<2){const V=pick([12,24,48,120,240]);const divs=[];for(let i=2;i<=20;i++)if(V%i===0)divs.push(i);const I=pick(divs),Rr=V/I;
+    if(v===0)return Q({text:`Ohm's law says ${m('V = IR')}. A ${V}-volt circuit has a resistance of ${Rr} ohms. What is the current ${m('I')}, in amps?`,
+      answer:num(I),wrong:[num(V*Rr),num(V+Rr),num(V-Rr),m(frac(Rr,V))],explain:`Divide both sides by ${m('R')}: ${m(`I = \\frac{V}{R} = \\frac{${V}}{${Rr}} = ${I}`)} amps.`});
+    return Q({text:`Ohm's law says ${m('V = IR')}. A ${V}-volt circuit draws ${I} amps. What is the resistance ${m('R')}, in ohms?`,
+      answer:num(Rr),wrong:[num(V*I),num(V+I),num(V-I),m(frac(I,V))],explain:`Divide both sides by ${m('I')}: ${m(`R = \\frac{V}{I} = \\frac{${V}}{${I}} = ${Rr}`)} ohms.`});}
+  const V=pick([120,240]),I=R(2,15);
+  return Q({text:`Power is ${m('P = IV')}. A ${V}-volt heater draws ${I} amps. How many watts does it use?`,answer:num(I*V),
+    wrong:[num(V+I),num(V/I%1===0?V/I:+(V/I).toFixed(1)),num(I*V*2),num(I*V/2)],explain:`${m(`P = ${I} \\times ${V} = ${I*V}`)} watts.`});
+}
+function app_meaning(){
+  const u=R(2,9)*5,jobs=R(12,40),L=u*jobs,v=pick([0,1,2]);
+  const intro=`A spool starts with ${L} feet of wire. The equation ${m(`W = ${L} - ${u}j`)} gives the feet of wire ${m('W')} left after ${m('j')} jobs.`;
+  if(v===2)return Q({text:`${intro} How many jobs can be done before the spool is empty?`,answer:num(jobs),wrong:[num(L-u),num(jobs+1),num(jobs-1),num(Math.round(L/u/2))],
+    explain:`Set ${m('W = 0')}: ${m(`${u}j = ${L}`)}, so ${m(`j = ${jobs}`)}.`});
+  const A=['The feet of wire used on each job','The feet of wire on the spool before any jobs','The number of jobs the spool can supply','The feet of wire left after one job'];
+  const ans=v===0?A[0]:A[1];
+  return Q({text:`${intro} What does the number ${m(v===0?u:L)} represent?`,answer:ans,wrong:A.filter(x=>x!==ans),
+    explain:v===0?`${m(u)} is the slope: each job (each increase of 1 in ${m('j')}) uses ${u} more feet.`:`${m(L)} is the value of ${m('W')} when ${m('j = 0')}, the starting amount.`});
+}
+
+/* ---------- 3. Factoring ---------- */
+function fac_gcf(){
+  const k=R(2,5);let r,s;do{r=nz(-7,7);s=nz(-7,7)}while(r+s===0||r===s);
+  const f=(a,b)=>`${k}${par(a)}${par(b)}`;
+  return Q({text:`Which expression is equivalent to ${m(poly([k,k*(r+s),k*r*s]))}?`,answer:m(f(r,s)),
+    wrong:[f(-r,-s),f(r,-s),f(-r,s),`${par(k*r)}${par(k*s)}`].map(m),
+    explain:`Factor out ${k} first: ${m(`${k}(${poly([1,r+s,r*s])})`)}. Two numbers that multiply to ${m(r*s)} and add to ${m(r+s)} are ${m(r)} and ${m(s)}, so it's ${m(f(r,s))}.`});
+}
+function fac_tri(){
+  let r,s;do{r=nz(-9,9);s=nz(-9,9)}while(r+s===0||r===s);
+  const f=(a,b)=>`${par(a)}${par(b)}`;
+  return Q({text:`Factor ${m(poly([1,r+s,r*s]))}.`,answer:m(f(r,s)),wrong:[f(-r,-s),f(r,-s),f(-r,s),`${par(r*s)}(x + 1)`].map(m),
+    explain:`Look for two numbers that multiply to ${m(r*s)} and add to ${m(r+s)}: ${m(r)} and ${m(s)}. Check by FOIL.`});
+}
+function fac_dos(){
+  const a=R(1,4),b=R(1,9),ax=a===1?'x':`${a}x`;
+  return Q({text:`Which expression is equivalent to ${m(poly([a*a,0,-b*b]))}?`,answer:m(`(${ax} - ${b})(${ax} + ${b})`),
+    wrong:[`(${ax} - ${b})^2`,`(${ax} + ${b})^2`,`(${b} - ${ax})(${b} + ${ax})`].map(m),
+    explain:`This is a difference of squares: ${m(`(${ax})^2 - ${b}^2`)}, and ${m('A^2 - B^2 = (A - B)(A + B)')}.`});
+}
+function fac_group(){
+  let a,b;do{a=R(1,9);b=R(1,9)}while(a===b);
+  return Q({text:`Which expression is equivalent to ${m(poly([1,a,b,a*b]))}?`,answer:m(`(x^2 + ${b})${par(a)}`),
+    wrong:[`(x^2 + ${a})${par(b)}`,`(x^2 - ${b})${par(a)}`,`(x^2 + ${b})${par(-a)}`].map(m),
+    explain:`Group in pairs: ${m(`x^2(x + ${a}) + ${b}(x + ${a})`)} ${m(`= (x^2 + ${b})(x + ${a})`)}.`});
+}
+
+/* ---------- 4. Quadratics ---------- */
+function q_satisfy(){
+  let r1,r2;do{r1=nz(-8,8);r2=nz(-8,8)}while(r1===r2);
+  const k=nz(-9,9),b=-(r1+r2),c=r1*r2,ans=pick([r1,r2]);
+  const pool=[-r1,-r2,r1+r2,ans+2,ans-3,c].filter(v=>v!==r1&&v!==r2);
+  return Q({text:`${m(`${poly([1,b,c+k])} = ${k}`)}<br>Which value of ${m('x')} satisfies the equation above?`,answer:num(ans),wrong:pool.map(num),
+    explain:`Move ${m(k)} to the left: ${m(`${poly([1,b,c])} = 0`)}. Factor: ${m(`${par(-r1)}${par(-r2)} = 0`)}, so ${m(`x = ${r1}`)} or ${m(`x = ${r2}`)}.`});
+}
+function q_range(){
+  let a,k;do{a=nz(-5,5);k=nz(-9,9)}while(a===k||Math.abs(a)===1&&Math.random()<.5);
+  const vtx=Math.random()<.5,h=nz(-6,6);
+  const body=vtx?`${coef(a)}${'\\left('+xp(-h)+'\\right)'}^2`:`${coef(a)}x^{4}`;
+  const eq=`y = ${body} ${k<0?'-':'+'} ${Math.abs(k)}`;
+  const up=a>0,ge=v=>`y \\ge ${v}`,le=v=>`y \\le ${v}`;
+  return Q({text:`Which best describes the range of ${m(eq)}?`,answer:m(up?ge(k):le(k)),
+    wrong:[m(up?le(k):ge(k)),m(up?ge(a):le(a)),'All real numbers',m(up?le(a):ge(a))],
+    explain:`${m(vtx?`\\left(${xp(-h)}\\right)^2`:'x^4')} is never negative. Multiplying by ${m(a)} makes that part ${up?'never negative':'never positive'}, so ${m('y')} is always ${up?'at least':'at most'} ${m(k)}.`});
+}
+function q_only(){
+  let r;do r=nz(-9,9);while(Math.abs(r)<2);
+  return Q({text:`For which equation is ${m(`x = ${r}`)} the only solution?`,answer:m(`\\left(${xp(-r)}\\right)^2 = 0`),
+    wrong:[`(${r}x)^2 = 0`,`\\left(${xp(r)}\\right)^2 = 0`,`${par(-r)}${par(r)} = 0`].map(m),
+    explain:`${m(`\\left(${xp(-r)}\\right)^2 = 0`)} only when ${m(`${xp(-r)} = 0`)}, so ${m(`x = ${r}`)} is the only solution. ${m(`${par(-r)}${par(r)} = 0`)} also has ${m(`x = ${-r}`)}.`});
+}
+function q_graph(){
+  let r1,r2;do{r1=R(-6,2);r2=r1+pick([2,4,6])}while(Math.abs(r1*r2)>10||r2>7||r1===0||r2===0||r1+r2===0);
+  const a=pick([1,-1]),h=(r1+r2)/2,kv=a*(h-r1)*(h-r2),f=x=>a*(x-r1)*(x-r2);
+  const vf=(s,hh,kk)=>`f(x) = ${s<0?'-':''}${hh===0?'x':`\\left(${xp(-hh)}\\right)`}^2${kk===0?'':` ${kk<0?'-':'+'} ${Math.abs(kk)}`}`;
+  const ex=`f(x) = ${poly([a,-a*(r1+r2),a*r1*r2])}`;
+  return Q({text:`The graph of ${m('y = f(x)')} is shown. Which equation could define ${m('f(x)')}?`,
+    figure:graph({curves:[{f}],pts:[[r1,0],[r2,0],[0,f(0)],[h,kv]],label:'Parabola on a coordinate grid'}),
+    answer:m(ex),wrong:[`f(x) = ${poly([-a,a*(r1+r2),-a*r1*r2])}`,`f(x) = ${a<0?'-':''}${par(r1)}${par(r2)}`,vf(a,h,-kv),vf(a,-h,kv)].map(m),
+    explain:`The graph crosses the ${m('x')}-axis at ${m(r1)} and ${m(r2)}, so ${m('f(x)')} has factors ${m(`${par(-r1)}${par(-r2)}`)}. It opens ${a>0?'up':'down'}, so the leading coefficient is ${a>0?'positive':'negative'}. Check the ${m('y')}-intercept: ${m(`f(0) = ${f(0)}`)}.`});
+}
+function q_disc(){
+  const target=pick([0,1,2]);let a,b,c,D;
+  do{a=nz(-3,3);b=R(-8,8);c=R(-9,9);D=b*b-4*a*c}while(Math.sign(D)!==[-1,0,1][target]||(target===1&&b===0&&c===0));
+  const opts=['No real solutions','Exactly one real solution','Two real solutions','Infinitely many solutions'];
+  return Q({text:`How many real solutions does ${m(`${poly([a,b,c])} = 0`)} have?`,answer:opts[target],wrong:opts.filter((_,i)=>i!==target),
+    explain:`Use the discriminant: ${m(`b^2 - 4ac = (${b})^2 - 4(${a})(${c}) = ${D}`)}. ${D>0?'Positive means two':D===0?'Zero means exactly one':'Negative means no'} real solution${D>0?'s':D===0?'':'s'}.`});
+}
+
+/* ---------- 5. Functions ---------- */
+function fn_eval(){
+  const a=pick([2,3,4,5,6,-2,-3,-4]),b=nz(-9,9),n=R(-6,12),ans=a*(n+b);
+  return Q({text:`Function ${m('g')} is defined by ${m(`g(x) = ${a}${par(b)}`)}. What is ${m(`g(${n})`)}?`,answer:num(ans),
+    wrong:[num(a*n+b),num(n+b),(n-a*b)%a===0?num((n-a*b)/a):null,num(a*n-b),num(ans+a)],
+    explain:`Replace ${m('x')} with ${m(n)}: ${m(`g(${n}) = ${a}(${n} ${b<0?'-':'+'} ${Math.abs(b)}) = ${a}(${n+b}) = ${ans}`)}.`});
+}
+function fn_shift(){
+  const b=nz(-6,6),c=nz(-9,9),k=nz(-4,4),f=poly([1,b,c]),expanded=Math.random()<.5;
+  if(!expanded)return Q({text:`If ${m(`f(x) = ${f}`)}, what is ${m(`f(${xp(k)})`)}?`,
+    answer:m(`(${xp(k)})^2 ${b<0?'-':'+'} ${Math.abs(b)===1?'':Math.abs(b)}(${xp(k)}) ${c<0?'-':'+'} ${Math.abs(c)}`),
+    wrong:[poly([1,b,c+k]),`(${xp(k)})(${f})`,poly([1,b,c+k*k])].map(m),
+    explain:`Replace every ${m('x')} with ${m(`(${xp(k)})`)}, keeping the parentheses.`});
+  return Q({text:`If ${m(`f(x) = ${f}`)}, which expression is equivalent to ${m(`f(${xp(k)})`)}?`,answer:m(poly([1,2*k+b,k*k+b*k+c])),
+    wrong:[poly([1,b,c+k]),poly([1,b+k,c+k]),poly([1,2*k+b,k*k+c]),poly([1,b,c+k*k])].map(m),
+    explain:`${m(`(${xp(k)})^2 ${b<0?'-':'+'} ${Math.abs(b)}(${xp(k)}) ${c<0?'-':'+'} ${Math.abs(c)}`)} ${m(`= ${poly([1,2*k,k*k])} + ${poly([b,b*k])} ${c<0?'-':'+'} ${Math.abs(c)}`)} ${m(`= ${poly([1,2*k+b,k*k+b*k+c])}`)}.`.replace(/\+ -/g,'- ')});
+}
+const FUNCS=[{f:x=>.12*x*x-5},{f:x=>.012*x**3-.5*x},{f:x=>Math.abs(x)-4},{f:x=>-.6*x+2},{f:x=>x<-8?NaN:2*Math.sqrt(x+8)-5},{f:x=>3*Math.sin(x/2)}];
+const NONFUNCS=[{fx:t=>6*Math.cos(t),fy:t=>6*Math.sin(t),t0:0,t1:2*Math.PI},{fx:t=>.12*t*t-5,fy:t=>t,t0:-12,t1:12},{fx:t=>7*Math.cos(t),fy:t=>4*Math.sin(t),t0:0,t1:2*Math.PI},{fx:t=>Math.abs(t)-3,fy:t=>t,t0:-12,t1:12},{fx:t=>3*Math.sin(t/2),fy:t=>t,t0:-12,t1:12}];
+function fn_vlt(){
+  const not=Math.random()<.4;
+  const right=not?pick(NONFUNCS):pick(FUNCS);
+  const others=shuffle(not?FUNCS:NONFUNCS).slice(0,3);
+  const g=c=>graph({w:150,small:true,curves:[c],label:'Graph'});
+  return Q({text:not?`Which graph is <b>not</b> the graph of a function ${m('y = f(x)')}?`:`Which graph is the graph of a function ${m('y = f(x)')}?`,
+    figs:true,answer:g(right),wrong:others.map(g),
+    explain:`Use the vertical line test: a graph is a function only if every vertical line crosses it at most once. ${not?'The answer has a spot where a vertical line hits it twice.':'Every other choice has a vertical line that hits it twice.'}`});
+}
+function fn_comp(){
+  const a=nz(-4,5),b=nz(-6,6),c=nz(-6,6),n=nz(-4,4),f=x=>a*x+b,g=x=>x*x+c,fg=Math.random()<.5;
+  const ans=fg?f(g(n)):g(f(n));
+  return Q({text:`If ${m(`f(x) = ${poly([a,b])}`)} and ${m(`g(x) = ${poly([1,0,c])}`)}, what is ${m(fg?`f(g(${n}))`:`g(f(${n}))`)}?`,answer:num(ans),
+    wrong:[num(fg?g(f(n)):f(g(n))),num(f(n)*g(n)),num(f(n)+g(n)),num(ans+1)],
+    explain:fg?`Inside first: ${m(`g(${n}) = ${g(n)}`)}. Then ${m(`f(${g(n)}) = ${a}(${g(n)}) ${b<0?'-':'+'} ${Math.abs(b)} = ${ans}`)}.`:`Inside first: ${m(`f(${n}) = ${f(n)}`)}. Then ${m(`g(${f(n)}) = (${f(n)})^2 ${c<0?'-':'+'} ${Math.abs(c)} = ${ans}`)}.`});
+}
+function fn_inverse(){
+  const a=R(2,7),b=nz(-9,9);
+  return Q({text:`If ${m(`f(x) = ${poly([a,b])}`)}, what is ${m('f^{-1}(x)')}?`,answer:m(`f^{-1}(x) = \\frac{${xp(-b)}}{${a}}`),
+    wrong:[`f^{-1}(x) = \\frac{${xp(b)}}{${a}}`,`f^{-1}(x) = ${poly([a,-b])}`,`f^{-1}(x) = \\frac{1}{${poly([a,b])}}`].map(m),
+    explain:`Write ${m(`y = ${poly([a,b])}`)}, swap ${m('x')} and ${m('y')}: ${m(`x = ${poly([a,b],'y')}`)}. Solve for ${m('y')}: ${m(`y = \\frac{${xp(-b)}}{${a}}`)}.`});
+}
+
+/* ---------- 6. Radical and rational equations ---------- */
+function rr_sqrt(){
+  const a=R(1,5),c=nz(-9,9),none=Math.random()<.25;
+  if(!none){const s=R(1,7),d=c+s,x0=R(-4,12),b=s*s-a*x0;
+    const eq=`\\sqrt{${poly([a,b])}} ${c<0?'-':'+'} ${Math.abs(c)} = ${d}`;
+    return Q({text:`What, if any, is a real solution to ${m(eq)}?`,answer:num(x0),
+      wrong:[m(frac(s-b,a)),m(frac((d+c)*(d+c)-b,a)),m(frac(d*d-b,a)),'There is no real solution.'],
+      explain:`Isolate the root: ${m(`\\sqrt{${poly([a,b])}} = ${s}`)}. Square both sides: ${m(`${poly([a,b])} = ${s*s}`)}, so ${m(`x = ${x0}`)}. Check it in the original equation.`});}
+  const b=nz(-9,9),s=-R(1,6),d=c+s;
+  const eq=`\\sqrt{${poly([a,b])}} ${c<0?'-':'+'} ${Math.abs(c)} = ${d}`;
+  return Q({text:`What, if any, is a real solution to ${m(eq)}?`,answer:'There is no real solution.',
+    wrong:[m(frac(s*s-b,a)),m(frac(d*d-b,a)),m(frac(s-b,a)),m(frac((d+c)*(d+c)-b,a))],
+    explain:`Isolate the root: ${m(`\\sqrt{${poly([a,b])}} = ${s}`)}. A square root can never be negative, so there is no real solution. (Squaring anyway gives an extraneous answer that fails the check.)`});
+}
+function rr_rational(){
+  let r1,r2,p,k,n,mm;
+  for(;;){r1=nz(-6,6);r2=nz(-6,6);if(r1===r2)continue;p=pick([1,2]);const P=Math.abs(r1*r2);const ds=[];for(let i=1;i<=12;i++)if(P%i===0)ds.push(i);
+    k=pick(ds)*pick([1,-1]);n=-r1*r2/k;mm=k*p-(r1+r2);
+    if(mm===0||n===0||Math.abs(mm)>12||Math.abs(n)>12)continue;
+    if([r1,r2].some(r=>r+mm===0||p*r+n===0))continue;if(p===1&&mm===n)continue;break}
+  const pair=(u,v)=>`${m(String(Math.min(u,v)))} and ${m(String(Math.max(u,v)))}`;
+  const ex2=n/p;const exTex=frac(-n,p);
+  return Q({text:`If ${m(`x \\ne ${-mm}`)} and ${m(`x \\ne ${exTex}`)}, what are the solutions to ${m(`\\frac{${k}}{${xp(mm)}} = \\frac{x}{${poly([p,n])}}`)}?`,
+    answer:pair(r1,r2),wrong:[pair(-r1,-r2),Number.isInteger(ex2)?pair(-mm,-ex2):`${m(String(-mm))} and ${m(exTex)}`,pair(r1,-r2),pair(-r1,r2)],
+    explain:`Cross-multiply: ${m(`${k}(${poly([p,n])}) = x(${xp(mm)})`)}. Collect terms: ${m(`${poly([1,mm-k*p,-k*n])} = 0`)}, which factors to ${m(`${par(-r1)}${par(-r2)} = 0`)}. Neither solution makes a denominator zero.`});
+}
+function rr_rationalize(){
+  const a=R(2,9);
+  return Q({text:`If ${m('x > 0')} and ${m(`x \\ne ${a*a}`)}, which expression is equivalent to ${m(`\\frac{x - ${a*a}}{\\sqrt{x} - ${a}}`)}?`,
+    answer:m(`\\sqrt{x} + ${a}`),wrong:[`\\sqrt{x} - ${a}`,`x + ${a}`,`\\frac{1}{\\sqrt{x} + ${a}}`].map(m),
+    explain:`The top is a difference of squares: ${m(`x - ${a*a} = (\\sqrt{x} - ${a})(\\sqrt{x} + ${a})`)}. Cancel ${m(`\\sqrt{x} - ${a}`)} to get ${m(`\\sqrt{x} + ${a}`)}.`});
+}
+function rr_simplify(){
+  const s=R(2,7),t=pick([2,3,5,6,7,10,11]),n=s*s*t;
+  return Q({text:`Which is equivalent to ${m(`\\sqrt{${n}}`)}?`,answer:m(`${s}\\sqrt{${t}}`),
+    wrong:[`${t}\\sqrt{${s}}`,`${s*s}\\sqrt{${t}}`,`${s}\\sqrt{${s*t}}`,`${t}\\sqrt{${s*s}}`].map(m),
+    explain:`Find the biggest perfect square factor: ${m(`${n} = ${s*s} \\times ${t}`)}. So ${m(`\\sqrt{${n}} = \\sqrt{${s*s}}\\sqrt{${t}} = ${s}\\sqrt{${t}}`)}.`});
+}
+
+/* ---------- 7. Polynomial equations ---------- */
+function poly_expand(){
+  const a=nz(-7,7),b=nz(-6,6),c=nz(-9,9);
+  return Q({text:`Which expression is equivalent to ${m(`${par(a)}(${poly([1,b,c])})`)}?`,answer:m(poly([1,a+b,c+a*b,a*c])),
+    wrong:[poly([1,b,c,a*c]),poly([1,a+b,c,a*c]),poly([1,b+1,c+a]),poly([1,a+b,a*b,a*c])].map(m),
+    explain:`Multiply each term of the first factor by every term of the second: ${m(`x(${poly([1,b,c])}) ${a<0?'-':'+'} ${Math.abs(a)}(${poly([1,b,c])})`)} ${m(`= ${poly([1,b,c,0])} ${a<0?'-':'+'} ${poly([Math.abs(a),Math.abs(a)*b,Math.abs(a)*c]).replace(/^-/,'')}`)}. Combine like terms.`.replace(/\+ -/g,'- ')});
+}
+function poly_end(){
+  const mp=pick([1,2]),p=nz(-5,5),q=nz(-5,5),sc=pick([0,1,2,3]);
+  const desc=['rises on both the far left and the far right','falls on both the far left and the far right','falls on the far left and rises on the far right','rises on the far left and falls on the far right'][sc];
+  const aPos=sc===0||sc===2,degEven=sc<2,bEven=(degEven?0:1)===(mp%2)?true:false;
+  const opt=(ap,be)=>`${m('a')} is ${ap?'positive':'negative'}, and ${m('b')} is ${be?'even':'odd'}.`;
+  const all=[opt(true,true),opt(true,false),opt(false,true),opt(false,false)],ans=opt(aPos,bEven);
+  return Q({text:`In ${m(`f(x) = a(${xp(p)})${mp>1?`^{${mp}}`:''}(${xp(-q)})^{b}`)}, ${m('a')} and ${m('b')} are integers and ${m('b')} is positive. The graph of ${m('y = f(x)')} ${desc}. What is true about ${m('a')} and ${m('b')}?`,
+    answer:ans,wrong:all.filter(x=>x!==ans),
+    explain:`The degree is ${m(`${mp} + b`)}. Both ends ${degEven?'match, so the degree is even':'go opposite ways, so the degree is odd'}, which makes ${m('b')} ${bEven?'even':'odd'}. ${aPos?'Rising':'Falling'} on the far right means the leading coefficient ${m('a')} is ${aPos?'positive':'negative'}.`});
+}
+function poly_zeros(){
+  const k=pick([1,2,3,-1,-2]);let a,b;do{a=R(1,8);b=R(1,8)}while(a===b);
+  const fx=`f(x) = ${coef(k)}x${par(-a)}${par(b)}`;
+  const s=arr=>list(arr.slice().sort((u,v)=>u-v));
+  return Q({text:`What are all the zeros of ${m(fx)}?`,answer:s([-b,0,a]),wrong:[s([-a,0,b]),s([-b,a]),s([0,a,b]),s([-a,-b,0])],
+    explain:`Set each factor equal to zero: ${m('x = 0')}, ${m(`x - ${a} = 0`)}, and ${m(`x + ${b} = 0`)}. The zeros are ${m(`${-b},\\ 0,\\ ${a}`)}. The constant ${m(k)} doesn't change the zeros.`});
+}
+function poly_remainder(){
+  const b=R(-6,6),c=R(-6,6),d=nz(-9,9),r=nz(-3,3),p=x=>x**3+b*x*x+c*x+d;
+  return Q({text:`What is the remainder when ${m(`p(x) = ${poly([1,b,c,d])}`)} is divided by ${m(par(-r))}?`,answer:num(p(r)),
+    wrong:[num(p(-r)),num(d),num(p(r)+r),num(p(r===1?2:1)),num(p(r)-1)],
+    explain:`By the remainder theorem, the remainder is ${m(`p(${r})`)} ${m(`= (${r})^3 ${b<0?'-':'+'} ${Math.abs(b)}(${r})^2 ${c<0?'-':'+'} ${Math.abs(c)}(${r}) ${d<0?'-':'+'} ${Math.abs(d)} = ${p(r)}`)}.`});
+}
+
+/* ---------- 8. Exponential and logarithmic ---------- */
+function exp_growth(){
+  const P=pick([100,200,250,400,500,1000]),f=pick([{w:'double',v:2},{w:'triple',v:3}]),h=pick([2,3,4,6,8,12]),per=24/h;
+  const e=(base,ex)=>`n = ${P}(${base})^{${ex}}`;
+  return Q({text:`A biologist starts with ${P} bacteria. The population is expected to ${f.w} every ${h} hours. Which equation gives the expected number of bacteria ${m('n')} after ${m('x')} days?`,
+    answer:m(e(f.v,`${per}x`)),wrong:[e(f.v,'x'),e(per,'x'),e(per,`${f.v}x`),e(f.v,`\\frac{x}{${per}}`)].map(m),
+    explain:`Growth model: ${m('n = (\\text{start})(\\text{factor})^{\\text{number of periods}}')}. One day has ${m(`24 \\div ${h} = ${per}`)} periods, so ${m('x')} days is ${m(`${per}x`)} periods: ${m(e(f.v,`${per}x`))}.`});
+}
+function exp_log(){
+  const b=pick([2,3,5,10]);let c,k;do{c=pick([3,5,6,7,11,13]);k=R(2,6)}while(c===b||k===c||k===b);
+  const L=(base,arg)=>`\\log_{${base}}${arg}`;
+  return Q({text:`Which equation is equivalent to ${m(`${b}^{${k}x} = ${c}`)}?`,answer:m(`x = \\frac{${L(b,c)}}{${k}}`),
+    wrong:[`x = ${L(b,`\\left(\\frac{${c}}{${k}}\\right)`)}`,`x = \\frac{${L(c,b)}}{${k}}`,`x = ${L(c,`\\left(\\frac{${k}}{${b}}\\right)`)}`].map(m),
+    explain:`${m('b^y = c')} means ${m('y = \\log_b c')}. Here ${m(`${k}x = ${L(b,c)}`)}, then divide by ${m(k)}.`});
+}
+function exp_evallog(){
+  const b=pick([2,3,4,5,10]);let n;do n=R(-2,4);while(b===10&&n>3);
+  const val=n>=0?`${b**n}`:`\\frac{1}{${b**-n}}`;
+  return Q({text:`What is the value of ${m(`\\log_{${b}}${n<0?'\\left('+val+'\\right)':val}`)}?`,answer:num(n),wrong:[num(-n),num(n+1),num(n-1),num(n*b),num(n+2)],
+    explain:`Ask: ${m(b)} to what power gives ${m(val)}? ${m(`${b}^{${n}} = ${val}`)}, so the answer is ${m(n)}.`});
+}
+function exp_samebase(){
+  const B=pick([2,3]);let u,v,q,x0;
+  do{u=R(1,3);v=R(1,3);q=R(1,5);x0=(v*q)/(v-u)}while(u===v||!Number.isInteger(x0)||Math.abs(x0)>15||(B===3&&Math.max(u,v)>2));
+  const base=e=>`${B**e}`;
+  return Q({text:`What value of ${m('x')} satisfies ${m(`${base(u)}^{x} = ${base(v)}^{${xp(-q)}}`)}?`,answer:num(x0),wrong:[num(q),num(-x0),num(x0+q),num(v*q)],
+    explain:`Rewrite with base ${B}: ${m(`${B}^{${u===1?'':u}x} = ${B}^{${v}(${xp(-q)})}`)}. Set exponents equal: ${m(`${poly([u,0])} = ${poly([v,-v*q])}`)}, so ${m(`x = ${x0}`)}.`});
+}
+function exp_percent(){
+  const P=pick([1200,2500,5000,8000,15000]),r=R(2,12),grow=Math.random()<.55,f=grow?1+r/100:1-r/100,o=grow?1-r/100:1+r/100;
+  const e=x=>`A = ${P}(${x})^{t}`;
+  return Q({text:`A town of ${P.toLocaleString('en-US')} people ${grow?'grows':'shrinks'} by ${r}% each year. Which equation gives the population ${m('A')} after ${m('t')} years?`,
+    answer:m(e(dec(f))),wrong:[e(dec(o)),e(dec(r/100)),e(1+r),e(dec(1+r/10))].map(m),
+    explain:`Each year the population is multiplied by ${m(`1 ${grow?'+':'-'} ${dec(r/100)} = ${dec(f)}`)}. After ${m('t')} years: ${m(e(dec(f)))}.`});
+}
+
+/* ---------- 9. Geometry ---------- */
+function geo_surface(){
+  let l,w,h;do{l=R(2,10);w=R(2,10);h=R(2,10)}while(l===w||w===h||l===h);
+  const SA=2*(l*w+l*h+w*h);
+  return Q({text:`The surface area of a rectangular prism is the sum of the areas of its 6 faces. What is the surface area of a prism with length ${l} cm, width ${w} cm, and height ${h} cm?`,
+    figure:prism(l,w,h),answer:`${SA} cm²`,wrong:[`${SA/2} cm²`,`${l*w*h} cm²`,`${SA-2*l*h} cm²`,`${SA+20} cm²`],
+    explain:`${m(`2(${l} \\cdot ${w}) + 2(${l} \\cdot ${h}) + 2(${w} \\cdot ${h}) = ${2*l*w} + ${2*l*h} + ${2*w*h} = ${SA}`)} cm². (${l*w*h} cm³ would be the volume.)`});
+}
+function geo_pyth(){
+  const [a0,b0,c0]=pick([[3,4,5],[5,12,13],[8,15,17],[7,24,25],[6,8,10]]),s=pick([1,1,2,3]),a=a0*s,b=b0*s,c=c0*s,findHyp=Math.random()<.5;
+  if(findHyp)return Q({text:`A conduit run goes ${a} feet across a wall and ${b} feet up. How long is a straight diagonal run between the same two points?`,
+    figure:rightTri({ac:`${a} ft`,bc:`${b} ft`,ab:'?'}),answer:`${c} ft`,wrong:[`${a+b} ft`,`${c+2} ft`,`${Math.abs(b-a)||c-1} ft`,`${c-2} ft`],
+    explain:`${m(`c^2 = ${a}^2 + ${b}^2 = ${a*a} + ${b*b} = ${c*c}`)}, so ${m(`c = ${c}`)}.`});
+  return Q({text:`A ${c}-foot ladder leans against a wall. Its base is ${a} feet from the wall. How high up the wall does it reach?`,
+    figure:rightTri({ac:`${a} ft`,bc:'?',ab:`${c} ft`}),answer:`${b} ft`,wrong:[`${c-a} ft`,`${c+a} ft`,`${b+2} ft`,`${b-2} ft`],
+    explain:`${m(`${a}^2 + h^2 = ${c}^2`)}, so ${m(`h^2 = ${c*c} - ${a*a} = ${b*b}`)} and ${m(`h = ${b}`)}.`});
+}
+function geo_congruent(){
+  const sets=shuffle([['J','K','L','P','Q','R'],['A','B','C','D','E','F'],['M','N','O','S','T','U']])[0];
+  const [J,K,L,P,Qv,Rv]=sets;const ang=x=>`\\angle ${x}`;
+  const good=[[`${J}${K} = ${P}${Qv}`,`${J}${L} = ${P}${Rv}`,'SAS (two sides and the angle between them)'],
+    [`${ang(K)} \\cong ${ang(Qv)}`,`${J}${K} = ${P}${Qv}`,'ASA (two angles and the side between them)'],
+    [`${ang(K)} \\cong ${ang(Qv)}`,`${K}${L} = ${Qv}${Rv}`,'AAS (two angles and a side not between them)']];
+  const bad=[[`${ang(K)} \\cong ${ang(Qv)}`,`${ang(L)} \\cong ${ang(Rv)}`],[`${J}${K} = ${P}${Qv}`,`${K}${L} = ${Qv}${Rv}`],[`${J}${L} = ${P}${Rv}`,`${K}${L} = ${Qv}${Rv}`]];
+  const g=pick(good),f=pr=>`${m(pr[0])} and ${m(pr[1])}`;
+  return Q({text:`Triangles ${J}${K}${L} and ${P}${Qv}${Rv} are shown, and ${m(`${ang(J)} \\cong ${ang(P)}`)}. Which additional facts are enough to prove the triangles congruent?`,
+    figure:twoTris([J,K,L],[P,Qv,Rv]),answer:f(g),wrong:bad.map(f),
+    explain:`With ${m(`${ang(J)} \\cong ${ang(P)}`)}, the correct pair gives ${g[2]}. The others give AAA (same shape, not same size) or SSA, and neither proves congruence.`});
+}
+function geo_circle(){
+  const r=R(2,12),dia=Math.random()<.5,area=Math.random()<.5,P=x=>m(`${x}\\pi`);
+  const given=dia?`a diameter of ${2*r} cm`:`a radius of ${r} cm`;
+  return Q({text:`A circle has ${given}. What is its ${area?'area':'circumference'}?`,
+    answer:area?P(r*r)+' cm²':P(2*r)+' cm',
+    wrong:area?[P(2*r)+' cm²',P(4*r*r)+' cm²',P(r)+' cm²',P(2*r*r)+' cm²']:[P(r*r)+' cm',P(r)+' cm',P(4*r)+' cm'],
+    explain:`${dia?`The radius is half the diameter: ${m(`r = ${r}`)}. `:''}${area?m(`A = \\pi r^2 = \\pi(${r})^2 = ${r*r}\\pi`):m(`C = 2\\pi r = 2\\pi(${r}) = ${2*r}\\pi`)}.`});
+}
+function geo_similar(){
+  const [p,q]=pick([[2,1],[3,1],[3,2],[5,2],[4,3]]),A=q*R(1,4)+q,Bv=q*R(1,5)+q,D=A*p/q,E=Bv*p/q;
+  return Q({text:`Triangle ABC is similar to triangle DEF. AB = ${A}, BC = ${Bv}, and DE = ${D}. What is EF?`,
+    figure:simTris(A,Bv,'','',D,'?'),answer:num(E),wrong:[num(Bv+(D-A)),m(frac(Bv*q,p)),num(E+q),num(E-1)],
+    explain:`The scale factor is ${m(`\\frac{DE}{AB} = \\frac{${D}}{${A}} = ${frac(p,q)}`)}. So ${m(`EF = ${Bv} \\times ${frac(p,q)} = ${E}`)}.`});
+}
+
+/* ---------- 10. Trigonometry ---------- */
+function trig_cos(){
+  let a,c;do{c=R(4,13);a=R(1,c-1)}while(gcd(a,c)!==1);
+  return Q({text:`In triangle ABC, angle C is a right angle. If ${m(`\\cos A = \\frac{${a}}{${c}}`)}, what is the value of ${m('\\cos B')}?`,
+    figure:rightTri({}),answer:m(radFrac(c*c-a*a,c)),wrong:[m(frac(a,c)),m(frac(c-a,c)),m(radFrac(c*c+a*a,c)),m(radFrac(c*c-a*a,a))],
+    explain:`Let ${m(`AC = ${a}`)} and ${m(`AB = ${c}`)}. Then ${m(`BC = \\sqrt{${c}^2 - ${a}^2} = ${radFrac(c*c-a*a,1)}`)}. Next to angle B is BC, so ${m(`\\cos B = \\frac{BC}{AB} = ${radFrac(c*c-a*a,c)}`)}.`});
+}
+function trig_soh(){
+  const [a0,b0,c0]=pick([[3,4,5],[5,12,13],[8,15,17],[7,24,25]]),s=pick([1,2]),opp=a0*s,adj=b0*s,hyp=c0*s;
+  const fn=pick(['sin','cos','tan']),ang=pick(['A','B']);
+  const o=ang==='A'?opp:adj,ad=ang==='A'?adj:opp;
+  const vals={sin:[o,hyp],cos:[ad,hyp],tan:[o,ad]};const ans=frac(...vals[fn]);
+  return Q({text:`In right triangle ABC, the right angle is at C, AC = ${adj}, BC = ${opp}, and AB = ${hyp}. What is ${m(`\\${fn} ${ang}`)}?`,
+    figure:rightTri({ac:adj,bc:opp,ab:hyp}),answer:m(ans),
+    wrong:['sin','cos','tan'].filter(x=>x!==fn).map(x=>m(frac(...vals[x]))).concat([m(frac(vals[fn][1],vals[fn][0]))]),
+    explain:`SOH-CAH-TOA from angle ${ang}: opposite = ${o}, adjacent = ${ad}, hypotenuse = ${hyp}. ${m(`\\${fn} ${ang} = ${frac(...vals[fn]).includes('frac')?`\\frac{${vals[fn][0]}}{${vals[fn][1]}}`:vals[fn][0]+'/'+vals[fn][1]} = ${ans}`)}.`});
+}
+function trig_special(){
+  const h=pick([4,6,8,10,12,14,16,20]),t=pick([30,45,60]),side=pick(['opp','adj']),H=h/2;
+  const ex={30:{opp:`${H}`,adj:`${H}\\sqrt{3}`},60:{opp:`${H}\\sqrt{3}`,adj:`${H}`},45:{opp:`${H}\\sqrt{2}`,adj:`${H}\\sqrt{2}`}};
+  const ans=ex[t][side];const pool=[`${H}`,`${H}\\sqrt{3}`,`${H}\\sqrt{2}`,`${h}\\sqrt{3}`,`${h}\\sqrt{2}`,`${h}`].filter(x=>x!==ans);
+  return Q({text:`In right triangle ABC (right angle at C), ${m(`m\\angle A = ${t}^\\circ`)} and the hypotenuse AB = ${h}. What is the length of ${side==='opp'?'BC':'AC'}?`,
+    figure:rightTri({ab:h,ac:side==='adj'?'?':'',bc:side==='opp'?'?':'',angleA:`${t}°`}),answer:m(ans),wrong:shuffle(pool).map(m),
+    explain:`${side==='opp'?m(`BC = ${h}\\sin ${t}^\\circ`):m(`AC = ${h}\\cos ${t}^\\circ`)} ${m(`= ${h} \\cdot ${({30:{opp:'\\frac{1}{2}',adj:'\\frac{\\sqrt{3}}{2}'},60:{opp:'\\frac{\\sqrt{3}}{2}',adj:'\\frac{1}{2}'},45:{opp:'\\frac{\\sqrt{2}}{2}',adj:'\\frac{\\sqrt{2}}{2}'}})[t][side]} = ${ans}`)}.`});
+}
+function trig_cofunction(){
+  const [a,b,c]=pick([[3,4,5],[5,12,13],[8,15,17],[7,24,25],[20,21,29]]);const v=pick([0,1]);
+  if(v===0)return Q({text:`In right triangle ABC with the right angle at C, ${m(`\\sin A = \\frac{${a}}{${c}}`)}. What is ${m('\\cos B')}?`,
+    answer:m(frac(a,c)),wrong:[m(frac(b,c)),m(frac(c,a)),m(frac(b,a)),m(frac(a,b))],
+    explain:`The side opposite A is the side next to B, so ${m('\\cos B = \\sin A')}. The two acute angles are complements.`});
+  return Q({text:`In right triangle ABC with the right angle at C, ${m(`\\sin A = \\frac{${a}}{${c}}`)}. What is ${m('\\tan A')}?`,
+    answer:m(frac(a,b)),wrong:[m(frac(b,a)),m(frac(b,c)),m(frac(c,b)),m(frac(a,c))],
+    explain:`Opposite = ${a}, hypotenuse = ${c}, so adjacent = ${m(`\\sqrt{${c}^2 - ${a}^2} = ${b}`)}. ${m(`\\tan A = \\frac{${a}}{${b}}`)}.`});
+}
+function trig_radians(){
+  const d=pick([30,45,60,90,120,135,150,210,225,240,270,300,315,330]);
+  if(Math.random()<.6)return Q({text:`What is ${m(`${d}^\\circ`)} in radians?`,answer:m(piFrac(d,180)),
+    wrong:[piFrac(d,360),piFrac(d,90),piFrac(180,d),`${d}\\pi`].map(m),
+    explain:`Multiply by ${m('\\frac{\\pi}{180}')}: ${m(`${d} \\cdot \\frac{\\pi}{180} = ${piFrac(d,180)}`)}.`});
+  return Q({text:`What is ${m(piFrac(d,180))} radians in degrees?`,answer:m(`${d}^\\circ`),
+    wrong:[`${d/2}^\\circ`,`${d*2}^\\circ`,`${+(d/180).toFixed(3)}^\\circ`,`${180-d}^\\circ`].map(m),
+    explain:`Multiply by ${m('\\frac{180}{\\pi}')}: ${m(`${piFrac(d,180)} \\cdot \\frac{180}{\\pi} = ${d}^\\circ`)}.`});
+}
+
+/* ---------- topics ---------- */
+const TOPICS=[
+ {id:'linear',name:'Linear equations',gens:[lin_solve,lin_twoPoints,lin_perpGraph],ideas:[
+   'Solve by doing the same thing to both sides until \\(x\\) is alone.',
+   'Slope: \\(m = \\frac{y_2 - y_1}{x_2 - x_1}\\). Slope-intercept form: \\(y = mx + b\\).',
+   'Parallel lines have the same slope. Perpendicular slopes are negative reciprocals: \\(\\frac{2}{3}\\) and \\(-\\frac{3}{2}\\).']},
+ {id:'apps',name:'Linear applications',gens:[app_service,app_rates,app_ohm,app_meaning],ideas:[
+   'Total = rate × amount + starting value, like \\(C = 45h + 80\\).',
+   'The slope is the rate (dollars per hour, cost per foot). The \\(y\\)-intercept is the starting value.',
+   'Ohm\'s law \\(V = IR\\) and power \\(P = IV\\): rearrange like any other equation.']},
+ {id:'factoring',name:'Factoring',gens:[fac_gcf,fac_tri,fac_dos,fac_group],ideas:[
+   'Always pull out the greatest common factor first.',
+   '\\(x^2 + bx + c\\): find two numbers that multiply to \\(c\\) and add to \\(b\\).',
+   'Difference of squares: \\(A^2 - B^2 = (A - B)(A + B)\\).',
+   'Four terms: group them in pairs and factor each pair.']},
+ {id:'quadratics',name:'Quadratics',gens:[q_satisfy,q_range,q_only,q_graph,q_disc],ideas:[
+   'Get one side equal to 0, factor, then set each factor equal to 0.',
+   'Quadratic formula: \\(x = \\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}\\).',
+   'Discriminant \\(b^2 - 4ac\\): positive means 2 solutions, zero means 1, negative means none.',
+   '\\(y = a(x - h)^2 + k\\) has vertex \\((h, k)\\). If \\(a > 0\\) it opens up and the range is \\(y \\ge k\\).']},
+ {id:'functions',name:'Functions',gens:[fn_eval,fn_shift,fn_vlt,fn_comp,fn_inverse],ideas:[
+   '\\(f(3)\\) means replace every \\(x\\) with 3.',
+   '\\(f(x + 2)\\) means replace every \\(x\\) with \\((x + 2)\\). Keep the parentheses.',
+   'Vertical line test: a function never has two \\(y\\)-values for one \\(x\\).',
+   '\\(f(g(x))\\): work from the inside out. Inverse: swap \\(x\\) and \\(y\\), then solve for \\(y\\).']},
+ {id:'radical',name:'Radical & rational equations',gens:[rr_sqrt,rr_rational,rr_rationalize,rr_simplify],ideas:[
+   'Isolate the square root, then square both sides.',
+   'A square root is never negative. \\(\\sqrt{\\ldots} = -3\\) has no real solution.',
+   'With fractions on both sides, cross-multiply. Throw out answers that make a denominator 0.',
+   'Simplify roots with the biggest perfect square factor: \\(\\sqrt{72} = 6\\sqrt{2}\\).']},
+ {id:'polynomial',name:'Polynomial equations',gens:[poly_expand,poly_end,poly_zeros,poly_remainder],ideas:[
+   'Multiply every term in the first factor by every term in the second, then combine like terms.',
+   'End behavior comes from the leading term. Even degree: both ends point the same way. Odd degree: opposite ways.',
+   'Positive leading coefficient: rises on the right. Negative: falls on the right.',
+   'Remainder theorem: \\(p(x) \\div (x - r)\\) leaves remainder \\(p(r)\\).']},
+ {id:'exponential',name:'Exponential & logarithmic',gens:[exp_growth,exp_log,exp_evallog,exp_samebase,exp_percent],ideas:[
+   'Exponential model: \\(y = a \\cdot b^{t}\\), where \\(a\\) is the start and \\(b\\) the growth factor.',
+   'Doubles every 4 hours, measured in days: exponent is \\(6x\\) (six 4-hour periods per day).',
+   '\\(b^y = c\\) means \\(y = \\log_b c\\).',
+   'Same base on both sides: set the exponents equal. Growth of r%: factor \\(1 + r\\). Decay: \\(1 - r\\).']},
+ {id:'geometry',name:'Geometry concepts',gens:[geo_surface,geo_pyth,geo_congruent,geo_circle,geo_similar],ideas:[
+   'Box surface area: \\(2lw + 2lh + 2wh\\). Volume: \\(lwh\\).',
+   'Right triangle: \\(a^2 + b^2 = c^2\\). Common triples: 3-4-5, 5-12-13, 8-15-17.',
+   'Circle: \\(A = \\pi r^2\\), \\(C = 2\\pi r\\).',
+   'Congruence proofs: SSS, SAS, ASA, AAS work. AAA and SSA do not. Similar triangles have proportional sides.']},
+ {id:'trig',name:'Trigonometry',gens:[trig_cos,trig_soh,trig_special,trig_cofunction,trig_radians],ideas:[
+   'SOH-CAH-TOA: \\(\\sin = \\frac{\\text{opp}}{\\text{hyp}}\\), \\(\\cos = \\frac{\\text{adj}}{\\text{hyp}}\\), \\(\\tan = \\frac{\\text{opp}}{\\text{adj}}\\).',
+   'In a right triangle, \\(\\cos B = \\sin A\\) because A and B add to \\(90^\\circ\\).',
+   '30-60-90 sides are \\(1 : \\sqrt{3} : 2\\). 45-45-90 sides are \\(1 : 1 : \\sqrt{2}\\).',
+   'Degrees to radians: multiply by \\(\\frac{\\pi}{180}\\).']}
+];
+function generate(id){
+  const t=TOPICS.find(x=>x.id===id);
+  for(let i=0;i<60;i++){try{const q=pick(t.gens)();return {...q,topic:t.id}}catch(e){if(e.message!=='retry')throw e}}
+  throw new Error('could not build a question for '+id);
+}
+</script>
+
+<script>
+(function(){
+  const KEY='aaf-practice-v1';
+  let stats={};try{stats=JSON.parse(localStorage.getItem(KEY))||{}}catch(e){}
+  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(stats))}catch(e){}};
+  let current='mixed',q=null,answered=false,count=0,streak=0;
+  try{const s=localStorage.getItem(KEY+'-topic');if(s&&(s==='mixed'||TOPICS.some(t=>t.id===s)))current=s}catch(e){}
+  const $=id=>document.getElementById(id);
+  const rail=$('rail');
+  const all=[{id:'mixed',name:'Mixed review'},...TOPICS];
+  for(const t of all){
+    const b=document.createElement('button');b.type='button';b.className='topic';b.dataset.id=t.id;
+    b.innerHTML=`<span>${t.name}</span><span class="score"></span><span class="bar"><i></i></span>`;
+    b.addEventListener('click',()=>{current=t.id;try{localStorage.setItem(KEY+'-topic',t.id)}catch(e){}next()});
+    rail.appendChild(b);
+  }
+  function paintRail(){
+    let R=0,N=0;
+    for(const b of rail.querySelectorAll('.topic')){
+      const id=b.dataset.id;b.setAttribute('aria-pressed',String(id===current));
+      let s;if(id==='mixed'){s={c:0,n:0};for(const t of TOPICS){const x=stats[t.id]||{c:0,n:0};s.c+=x.c;s.n+=x.n}}else s=stats[id]||{c:0,n:0};
+      if(id!=='mixed'){R+=s.c;N+=s.n}
+      b.querySelector('.score').textContent=s.n?`${s.c}/${s.n}`:'–';
+      b.querySelector('.bar i').style.width=s.n?`${Math.round(100*s.c/s.n)}%`:'0';
+    }
+    $('t-right').textContent=R;$('t-tried').textContent=N;$('t-streak').textContent=streak;
+  }
+  const typeset=el=>{if(window.MathJax&&MathJax.typesetPromise){try{MathJax.typesetClear&&MathJax.typesetClear([el])}catch(e){}return MathJax.typesetPromise([el]).catch(()=>{})}return Promise.resolve()};
+  function render(){
+    const t=TOPICS.find(x=>x.id===q.topic);
+    $('q-topic').textContent=current==='mixed'?`Mixed review · ${t.name}`:t.name;
+    $('q-num').textContent=`Problem ${count}`;
+    $('q-text').innerHTML=q.text;
+    const fig=$('q-fig');if(q.figure){fig.innerHTML=q.figure;fig.hidden=false}else{fig.innerHTML='';fig.hidden=true}
+    const ul=$('q-choices');ul.className='choices'+(q.figs?' figs':'');ul.innerHTML='';
+    q.choices.forEach((c,i)=>{const li=document.createElement('li');const b=document.createElement('button');b.type='button';b.className='choice';b.id='choice-'+i;
+      b.innerHTML=`<span class="ltr">${'ABCD'[i]}</span><span class="body">${c}</span>`;b.addEventListener('click',()=>answer(i));li.appendChild(b);ul.appendChild(li)});
+    $('q-feedback').hidden=true;$('next').hidden=true;$('skip').hidden=false;
+    $('ideas-title').textContent=`Key ideas: ${t.name}`;
+    $('ideas-list').innerHTML=t.ideas.map(s=>`<li>${s}</li>`).join('');
+    paintRail();
+    typeset($('card'));typeset($('ideas'));
+  }
+  function next(){
+    const id=current==='mixed'?pick(TOPICS).id:current;
+    q=generate(id);answered=false;count++;render();
+  }
+  function answer(i){
+    if(answered)return;answered=true;
+    const ok=i===q.correct;
+    const s=stats[q.topic]||(stats[q.topic]={c:0,n:0});s.n++;if(ok)s.c++;save();
+    streak=ok?streak+1:0;
+    $('q-choices').querySelectorAll('.choice').forEach((b,j)=>{b.disabled=true;if(j===q.correct)b.classList.add('right');else if(j===i)b.classList.add('wrong');else b.classList.add('dim')});
+    const fb=$('q-feedback');fb.className='feedback '+(ok?'ok':'no');
+    fb.innerHTML=`<p class="verdict">${ok?'Correct':'Not quite. The answer is '+'ABCD'[q.correct]+'.'}</p><p>${q.explain}</p>`;
+    fb.hidden=false;$('next').hidden=false;$('skip').hidden=true;$('next').focus({preventScroll:true});
+    paintRail();typeset(fb);
+  }
+  $('next').addEventListener('click',next);$('skip').addEventListener('click',next);
+  let armed=false;
+  $('reset').addEventListener('click',e=>{
+    if(!armed){armed=true;e.target.textContent='Click again to erase all scores';e.target.classList.add('confirm');setTimeout(()=>{armed=false;e.target.textContent='Reset scores';e.target.classList.remove('confirm')},4000);return}
+    stats={};streak=0;save();armed=false;e.target.textContent='Reset scores';e.target.classList.remove('confirm');paintRail();
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.metaKey||e.ctrlKey||e.altKey)return;
+    const k=e.key.toLowerCase();const idx='abcd'.indexOf(k)>=0?'abcd'.indexOf(k):'1234'.indexOf(k);
+    if(!answered&&idx>=0&&e.target.tagName!=='INPUT'){answer(idx);e.preventDefault()}
+    else if(answered&&(k==='enter'||k==='n')&&document.activeElement?.id!=='reset'){next();e.preventDefault()}
+  });
+  next();
+  const mj=document.getElementById('mjx');
+  mj.addEventListener('load',()=>{const w=()=>window.MathJax&&MathJax.startup&&MathJax.startup.promise?MathJax.startup.promise.then(()=>{typeset($('card'));typeset($('ideas'))}):setTimeout(w,50);w()});
+})();
+</script>
+
+</body>
+</html>
